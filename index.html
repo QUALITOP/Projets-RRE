@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="./resources/ol.css">
+        <link rel="stylesheet" href="resources/fontawesome-all.min.css">
+        <link href="resources/photon-geocoder-autocomplete.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="./resources/ol-layerswitcher.css">
+        <link rel="stylesheet" href="./resources/qgis2web.css">
+      <style>
+
+/* ================================================= */
+/* STYLE GENERAL DE LA CARTE                         */
+/* ================================================= */
+
+html, body, #map {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+html, body {
+    background-color: #ffffff;
+}
+
+/* ================================================= */
+/* MASQUER L'ATTRIBUTION (TEXTE EN BAS A GAUCHE)     */
+/* ================================================= */
+
+.ol-attribution,
+.ol-attribution *,
+[class*="attribution"],
+[id*="attribution"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    width: 0 !important;
+    pointer-events: none !important;
+}
+
+/* ================================================= */
+/* LOGO GAUCHE                                       */
+/* ================================================= */
+
+#map-logo {
+    position: absolute !important;
+    top: 5px !important;
+    left: 50px !important;
+    z-index: 3000 !important;
+    background: transparent;
+    pointer-events: none;
+}
+
+#map-logo img {
+    height: 50px !important;
+    width: auto !important;
+    display: block;
+    border-radius: 4px;
+    filter:
+        drop-shadow(0px 2px 2px rgba(0,0,0,0.45))
+        drop-shadow(0px 0px 1px rgba(255,255,255,0.9));
+}
+
+/* ================================================= */
+/* LOGO DROITE                                       */
+/* ================================================= */
+
+#map-logo-right {
+    position: absolute !important;
+    top: 5px !important;
+    right: 10px !important;
+    z-index: 3000 !important;
+    background: transparent;
+    pointer-events: none;
+}
+
+#map-logo-right img {
+    height: 65px !important;
+    width: auto !important;
+    display: block;
+    border-radius: 4px;
+    filter:
+        drop-shadow(0px 2px 2px rgba(0,0,0,0.45))
+        drop-shadow(0px 0px 1px rgba(255,255,255,0.9));
+}
+
+/* ================================================= */
+/* TITRE CENTRE                                      */
+/* ================================================= */
+
+#map-title {
+    position: absolute !important;
+    top: 10px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 2000 !important;
+    text-align: center;
+    background: transparent;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+#map-title h1 {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #1f3c5b;
+    white-space: nowrap;
+    text-shadow:
+        1px 1px 2px #ffffff,
+        -1px -1px 2px #ffffff,
+        1px 1px 2px #ffffff,
+        -1px 1px 2px #ffffff;
+}
+
+#map-title p {
+    margin: 3px 0 0 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #444444;
+    white-space: nowrap;
+    text-shadow:
+        1px 1px 2px #ffffff,
+        -1px -1px 2px #ffffff,
+        1px 1px 2px #ffffff,
+        -1px 1px 2px #ffffff;
+}
+
+/* ================================================= */
+/* CONTENEUR DES ICONES SOUS LE LOGO GAUCHE          */
+/* ================================================= */
+
+.ol-top-left {
+    position: absolute !important;
+    top: 65px !important;
+    left: 10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+    z-index: 2500 !important;
+}
+
+.ol-top-left > *,
+.ol-top-left .ol-control,
+.ol-top-left .search-layer,
+.ol-top-left .gcd-gl-control {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    margin: 0 !important;
+}
+
+.ol-control > * {
+    background-color: #f8f8f8 !important;
+    color: #444444 !important;
+    border-radius: 4px !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+}
+
+.ol-control {
+    background-color: transparent !important;
+    padding: 0 !important;
+}
+
+.ol-zoom {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 3px !important;
+}
+
+.ol-zoom button {
+    width: 32px !important;
+    height: 32px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 18px !important;
+}
+
+/* ================================================= */
+/* LAYER SWITCHER (LISTE DES COUCHES SOUS LOGO DROIT)*/
+/* ================================================= */
+
+.layer-switcher,
+.ol-layerswitcher {
+    top: 65px !important;
+    right: 10px !important;
+    left: auto !important;
+    z-index: 2500 !important;
+}
+
+/* ================================================= */
+/* SIGNATURE EN BAS A DROITE                         */
+/* ================================================= */
+
+#map-footer-signature {
+    position: absolute !important;
+    bottom: 8px !important;
+    right: 10px !important;
+    z-index: 3000 !important;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #1f3c5b;
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 4px 8px;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    pointer-events: none;
+}
+
+/* ================================================= */
+/* VERSION MOBILE                                    */
+/* ================================================= */
+
+@media screen and (max-width: 700px) {
+
+    #map-logo img, #map-logo-right img {
+        height: 35px !important;
+    }
+
+    #map-title h1 {
+        font-size: 15px;
+    }
+
+    #map-title p {
+        font-size: 10px;
+    }
+
+    .ol-top-left {
+        top: 50px !important;
+        left: 5px !important;
+    }
+
+    .layer-switcher,
+    .ol-layerswitcher {
+        top: 50px !important;
+        right: 5px !important;
+    }
+
+    #map-footer-signature {
+        font-size: 10px;
+        padding: 2px 6px;
+    }
+
+}
+
+</style>
+
+<title>
+    Géoportail Cartographique - Projets Rabat Région Emergence
+</title>
+
+</head>
+
+<body>
+
+<div id="map-logo">
+    <img src="images/images.png" >
+</div>
+
+<div id="map-logo-right">
+    <img src="images\QUALITOP CONSULTING.jpg" >
+</div>
+
+<div id="map-title">
+    <h1>RABAT REGION EMERGENCE</h1>
+    <p>GEOPORTAIL CARTOGRAPHIQUE</p>
+</div>
+
+<div id="map-footer-signature">
+    Réalisé par : QUALITOP CONSULTING
+</div>
+
+<div id="map">
+    <div id="popup" class="ol-popup">
+        <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+        <div id="popup-content"></div>
+    </div>
+</div>
+        <script src="resources/qgis2web_expressions.js"></script>
+<script src="resources/proj4.js"></script>
+        <script>proj4.defs('EPSG:26191','+proj=lcc +lat_1=33.3 +lat_0=33.3 +lon_0=-5.4 +k_0=0.999625769 +x_0=500000 +y_0=300000 +ellps=clrk80ign +towgs84=31,146,47,0,0,0,0 +units=m +no_defs');</script>
+        <script src="./resources/functions.js"></script>
+        <script src="./resources/ol.js"></script>
+        <script src="./resources/ol-layerswitcher.js"></script>
+        <script src="resources/photon-geocoder-autocomplete.min.js"></script>
+        <script src="resources/olms.js"></script>
+        <script src="layers/LimiteProjetOumAzza_2.js"></script><script src="layers/LimiteProjetSidiYahyaZair_3.js"></script><script src="layers/LimiteProjetSkhirate_4.js"></script><script src="layers/LimiteProjetAinJohraExtension_5.js"></script><script src="layers/LimiteProjetAinJohraExistante_6.js"></script><script src="layers/LimitedeslotsAinJohraExistante_7.js"></script><script src="layers/LimiteProjet_8.js"></script><script src="layers/LimitesdeslotsBouknadel_9.js"></script>
+        <script src="styles/LimiteProjetOumAzza_2_style.js"></script><script src="styles/LimiteProjetSidiYahyaZair_3_style.js"></script><script src="styles/LimiteProjetSkhirate_4_style.js"></script><script src="styles/LimiteProjetAinJohraExtension_5_style.js"></script><script src="styles/LimiteProjetAinJohraExistante_6_style.js"></script><script src="styles/LimitedeslotsAinJohraExistante_7_style.js"></script><script src="styles/LimiteProjet_8_style.js"></script><script src="styles/LimitesdeslotsBouknadel_9_style.js"></script>
+        <script src="./layers/layers.js" type="text/javascript"></script> 
+        <script src="./resources/Autolinker.min.js"></script>
+        <script src="./resources/qgis2web.js"></script>        
+    </body>
+</html>
